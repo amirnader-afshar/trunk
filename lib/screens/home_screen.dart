@@ -43,29 +43,35 @@ class _homepageState extends State<homepage> {
   }
 
 
+
+
   void getSlider() {
     if (sliderList.length == 0) {
-      var url = "http://192.168.2.131:3000/api/slides" + ;
-      Map<String, String> userHeader = {
-        "Content-type": "application/json",
-        "x-auth":
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjI2OWVhMjlmYTVjNjQ1NTRmNGY5YjMiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTk2MzY2NTcyfQ.A1bc4JZ4VSAnuBIFNWB8DRXXrIIKktN6tbsJoOB5_pE"
-      };
-      http.get(url, headers: userHeader).then((response) {
-        print(response.statusCode);
-        if (response.statusCode == 200) {
-          List jsonResponse = convert.jsonDecode(response.body);
-          for (int i = 0; i < jsonResponse.length; i++) {
-            setState(() {
-              sliderList.add(new Appslider(
-                  titel: jsonResponse[i]['titel'],
-                  code:  jsonResponse[i]['code'],
-                  img_url: jsonResponse[i]['img_url']));
-            });
-          }
-        }
-      });
+      var url = "http://192.168.2.131:3000/api/slides";
+    Map<String, String> userHeader = {
+    "Content-type": "application/json",
+    "x-auth":
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjI2OWVhMjlmYTVjNjQ1NTRmNGY5YjMiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTk2MzY2NTcyfQ.A1bc4JZ4VSAnuBIFNWB8DRXXrIIKktN6tbsJoOB5_pE"
+    };
+    http.get(url, headers: userHeader).then((response) {
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+    List jsonResponse = convert.jsonDecode(response.body);
+    for (int i = 0; i < jsonResponse.length; i++) {
+        setState(() {
+        sliderList.add(new Appslider(
+        code: jsonResponse[i]['code'],
+        titel: jsonResponse[i]['titel'],
+        img_url: jsonResponse[i]['img_url'],
+        text:jsonResponse[i]['text'],
+        action:jsonResponse[i]['action'],
+        ));
+        });
     }
+    }
+    });
+  }
+  }
 
 
 
@@ -73,19 +79,23 @@ class _homepageState extends State<homepage> {
   @override
   Widget build(BuildContext context) {
 
-    sliders.add(Center(child: Text("Slide1"),));
-    sliders.add(Center(child: Text("Slide2"),));
-    sliders.add(Center(child: Text("Slide3"),));
+
+
+
 
       getProductList('product',new_products);
       getProductList('product',order_products);
       print(new_products);
 
+      getSlider();
+      print(sliderList);
+
+
     return SingleChildScrollView(child: Column(
       children: <Widget>[
-        Container(child: PageView.builder(itemBuilder: (context,position){
-          return sliders[position];
-        },itemCount: sliders.length,)
+        Container(child: sliderList.length>0?PageView.builder(itemBuilder: (context,position){
+    return sliderView(position);
+    },itemCount: sliderList.length,):Center(child: CircularProgressIndicator(),)
           ,height: 200,),
         Padding(
           padding: const EdgeInsets.all(10.0),
@@ -187,4 +197,10 @@ Widget indexProductView(int index,List<Product> list){
     ),
   );
 }
+
+  Widget sliderView(int position) {
+
+      return Image(image: NetworkImage(sliderList[position].img_url),fit: BoxFit.fitWidth,);
+
+  }
 }

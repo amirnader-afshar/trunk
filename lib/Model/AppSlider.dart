@@ -6,5 +6,6 @@ class Appslider {
   String text;
   String action;
 
-  Appslider({this.titel,this.img_url,this.titel,this.text,this.action})
+  Appslider({this.titel,this.img_url,this.code,this.text,this.action});
+
 }
