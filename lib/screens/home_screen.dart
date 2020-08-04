@@ -40,15 +40,25 @@ class _homepageState extends State<homepage> {
     }
   }
 
+
+  List<Widget> sliders = [];
   @override
   Widget build(BuildContext context) {
+
+    sliders.add(Center(child: Text("Slide1"),));
+    sliders.add(Center(child: Text("Slide2"),));
+    sliders.add(Center(child: Text("Slide3"),));
 
       getProductList('product',new_products);
       getProductList('product',order_products);
       print(new_products);
 
-    return Column(
+    return SingleChildScrollView(child: Column(
       children: <Widget>[
+        Container(child: PageView.builder(itemBuilder: (context,position){
+          return sliders[position];
+        },itemCount: sliders.length,)
+          ,height: 200,),
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Row(
@@ -56,28 +66,28 @@ class _homepageState extends State<homepage> {
               Expanded(child: Text("جدیدترین محصولات")),
               Expanded(
                   child: Text(
-                " نمایش همه > ",
-                textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.blue),
-              ))
+                    " نمایش همه > ",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(color: Colors.blue),
+                  ))
             ],
           ),
         ),
         new_products.length > 0
             ? Container(
-                height: 270,
-                child: ListView.builder(
-                  itemBuilder: newProductsList,
-                  itemCount: new_products.length,
-                  scrollDirection: Axis.horizontal,
-                ),
-              )
+          height: 270,
+          child: ListView.builder(
+            itemBuilder: newProductsList,
+            itemCount: new_products.length,
+            scrollDirection: Axis.horizontal,
+          ),
+        )
             : Container(
-                height: 270,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
+          height: 270,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Row(
@@ -108,7 +118,7 @@ class _homepageState extends State<homepage> {
           ),
         )
       ],
-    );
+    ),);
   }
 
   Widget newProductsList(BuildContext context, int index) {
