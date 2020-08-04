@@ -18,8 +18,22 @@ void main(){
       ],
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        drawer: Drawer(child: Container(
+          child: Column(children: <Widget>[
+            ListTile(title: Text("ورود"),onTap: (){
+              print("login");
+            },)
+            ,ListTile(title: Text("ثبت نام"),onTap: (){
+              print("signup");
+            },)
+
+          ],),
+        ),),
         appBar: AppBar(backgroundColor: Colors.red,
-        title: Text("فروشگاه من"),),
+        title: Text("فروشگاه من"),
+        actions: <Widget>[IconButton(icon:Icon( Icons.search),onPressed: (){})
+        ,IconButton(icon:Icon( Icons.shopping_cart),onPressed: (){}),
+      ]),
       body: homepage(),
       ),
     )
