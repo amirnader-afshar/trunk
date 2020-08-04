@@ -4,6 +4,7 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
 import '../Model/Product.dart';
+import '../Model/AppSlider.dart';
 
 class homepage extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class homepage extends StatefulWidget {
 class _homepageState extends State<homepage> {
   List<Product> new_products = [];
   List<Product> order_products = [];
+  List<Appslider>  sliderList =[];
 
 
   void getProductList(String action,List<Product> list) {
@@ -41,7 +43,33 @@ class _homepageState extends State<homepage> {
   }
 
 
-  List<Widget> sliders = [];
+  void getSlider() {
+    if (sliderList.length == 0) {
+      var url = "http://192.168.2.131:3000/api/slides" + ;
+      Map<String, String> userHeader = {
+        "Content-type": "application/json",
+        "x-auth":
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjI2OWVhMjlmYTVjNjQ1NTRmNGY5YjMiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTk2MzY2NTcyfQ.A1bc4JZ4VSAnuBIFNWB8DRXXrIIKktN6tbsJoOB5_pE"
+      };
+      http.get(url, headers: userHeader).then((response) {
+        print(response.statusCode);
+        if (response.statusCode == 200) {
+          List jsonResponse = convert.jsonDecode(response.body);
+          for (int i = 0; i < jsonResponse.length; i++) {
+            setState(() {
+              sliderList.add(new Appslider(
+                  titel: jsonResponse[i]['titel'],
+                  code:  jsonResponse[i]['code'],
+                  img_url: jsonResponse[i]['img_url']));
+            });
+          }
+        }
+      });
+    }
+
+
+
+    List<Widget> sliders = [];
   @override
   Widget build(BuildContext context) {
 
