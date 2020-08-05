@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import '../Model/Product.dart';
 import '../screens/product_screen.dart';
 
-
 class homepage extends StatefulWidget {
   @override
   _homepageState createState() => _homepageState();
@@ -19,14 +18,13 @@ class _homepageState extends State<homepage> {
   List<Product> new_products = [];
   List<Product> order_products = [];
 
-
   void getProductList(String action, List<Product> list) {
     if (list.length == 0) {
-      var url = "http://192.168.1.7:3000/api/" + action;
+      var url = "http://192.168.2.131:3000/api/" + action;
       Map<String, String> userHeader = {
         "Content-type": "application/json",
         "x-auth":
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjIzMmQ1YzE5MGMwNTE4MGMyMjAyYzIiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTk2MTQxMjQyfQ.VReowAw_d4wawd12_HadyAI8nAC0ZsqBSGYsIYFutW8"
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjI2OWVhMjlmYTVjNjQ1NTRmNGY5YjMiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTk2NjE2MTAxfQ.nwb0AYA85192qnOh2dQg1M1qO7L4i969QYt5wBNrTCg"
       };
       http.get(url, headers: userHeader).then((response) {
         print(response.statusCode);
@@ -37,15 +35,14 @@ class _homepageState extends State<homepage> {
               list.add(new Product(
                   title: jsonResponse[i]['name'],
                   price: jsonResponse[i]['price'],
-                  img_url: jsonResponse[i]['img_url']));
+                  img_url: jsonResponse[i]['img_url'],
+                  id: jsonResponse[i]['_id']));
             });
           }
         }
       });
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +53,7 @@ class _homepageState extends State<homepage> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          HomeSlider()
-          ,
+          HomeSlider(),
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Row(
@@ -130,15 +126,14 @@ class _homepageState extends State<homepage> {
   }
 
   Widget indexProductView(int index, List<Product> list) {
-
-    String price ="";
-    String toman =" تومان ";
+    String price = "";
+    String toman = " تومان ";
     var formater = new NumberFormat('###,###');
-    price =formater.format( list[index].price)+toman;
+    price = formater.format(list[index].price) + toman;
 
-    String title = list[index].title.length>25 ?
-    list[index].title.substring(0,25)+' ...'
-        :list[index].title;
+    String title = list[index].title.length > 25
+        ? list[index].title.substring(0, 25) + ' ...'
+        : list[index].title;
 
     return Container(
       width: 210,
@@ -154,19 +149,23 @@ class _homepageState extends State<homepage> {
             image: NetworkImage(list[index].img_url),
             height: 150,
           )),
-          GestureDetector(child: Text(title)
-            ,onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder:
-              (BuildContext context)=>ProductPage()));
-            },),
-
+          GestureDetector(
+            child: Text(title),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          ProductPage(list[index])));
+            },
+          ),
           Divider(
             color: Colors.grey,
           ),
           Container(
             margin: EdgeInsets.only(left: 15),
             child: Text(
-             price,
+              price,
               textAlign: TextAlign.left,
             ),
             width: 210,
@@ -175,6 +174,4 @@ class _homepageState extends State<homepage> {
       ),
     );
   }
-
-
 }

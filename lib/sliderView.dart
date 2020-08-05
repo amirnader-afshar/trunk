@@ -16,11 +16,11 @@ class _HomeSliderState extends State<HomeSlider> {
 
   void getSlider() {
     if (sliderList.length == 0) {
-      var url = "http://192.168.1.7:3000/api/slides";
+      var url = "http://192.168.2.131:3000/api/slides";
       Map<String, String> userHeader = {
         "Content-type": "application/json",
         "x-auth":
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjIzMmQ1YzE5MGMwNTE4MGMyMjAyYzIiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTk2MTQxMjQyfQ.VReowAw_d4wawd12_HadyAI8nAC0ZsqBSGYsIYFutW8"
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjI2OWVhMjlmYTVjNjQ1NTRmNGY5YjMiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTk2NjE2MTAxfQ.nwb0AYA85192qnOh2dQg1M1qO7L4i969QYt5wBNrTCg"
       };
       http.get(url, headers: userHeader).then((response) {
         print(response.statusCode);
