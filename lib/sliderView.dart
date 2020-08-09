@@ -3,6 +3,7 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
 import 'Model/AppSlider.dart';
+import 'package:flutter_afshar_app/AppDate.dart';
 
 class HomeSlider extends StatefulWidget {
   @override
@@ -16,11 +17,11 @@ class _HomeSliderState extends State<HomeSlider> {
 
   void getSlider() {
     if (sliderList.length == 0) {
-      var url = "http://192.168.2.131:3000/api/slides";
+      var url = AppDate.App_URL+"slides";
       Map<String, String> userHeader = {
         "Content-type": "application/json",
-        "x-auth":
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjI2OWVhMjlmYTVjNjQ1NTRmNGY5YjMiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTk2NjE2MTAxfQ.nwb0AYA85192qnOh2dQg1M1qO7L4i969QYt5wBNrTCg"
+        "x-auth": AppDate.Token
+
       };
       http.get(url, headers: userHeader).then((response) {
         print(response.statusCode);
