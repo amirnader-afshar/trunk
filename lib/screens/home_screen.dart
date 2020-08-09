@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 import '../Model/Product.dart';
 import '../screens/product_screen.dart';
-import '../AppDate.dart';
+import '../AppData.dart';
 
 class homepage extends StatefulWidget {
   @override
@@ -21,10 +21,10 @@ class _homepageState extends State<homepage> {
 
   void getProductList(String action, List<Product> list) {
     if (list.length == 0) {
-      var url = AppDate.App_URL + action;
+      var url = AppData.App_URL + action;
       Map<String, String> userHeader = {
         "Content-type": "application/json",
-        "x-auth":AppDate.Token
+        "x-auth":AppData.Token
 
       };
       http.get(url, headers: userHeader).then((response) {

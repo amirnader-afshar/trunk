@@ -3,7 +3,7 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
 import 'Model/AppSlider.dart';
-import 'package:flutter_afshar_app/AppDate.dart';
+import 'package:flutter_afshar_app/AppData.dart';
 
 class HomeSlider extends StatefulWidget {
   @override
@@ -17,10 +17,10 @@ class _HomeSliderState extends State<HomeSlider> {
 
   void getSlider() {
     if (sliderList.length == 0) {
-      var url = AppDate.App_URL+"slides";
+      var url = AppData.App_URL+"slides";
       Map<String, String> userHeader = {
         "Content-type": "application/json",
-        "x-auth": AppDate.Token
+        "x-auth": AppData.Token
 
       };
       http.get(url, headers: userHeader).then((response) {
