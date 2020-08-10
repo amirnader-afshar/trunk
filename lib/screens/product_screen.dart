@@ -20,7 +20,7 @@ class _ProductPageState extends State<ProductPage> {
   String title = "";
   String img_url = "";
   String content = "";
-
+  int  tab_index=0;
   _ProductPageState(product_instanse) {
     Map<String, String> userHeader = {
       "Content-type": "application/json",
@@ -46,21 +46,15 @@ class _ProductPageState extends State<ProductPage> {
     String titel = "";
     titel = widget.product_instanse.title;
     titel = titel.length > 30 ? titel.substring(0, 30) + ' .... ' : titel;
+
     return MaterialApp(
-      home: DefaultTabController(length: 3,child: Scaffold(
+      home:  Scaffold(
         appBar: AppBar(
-          bottom: TabBar(
-              tabs: <Widget>[
-            Tab(text: "توضیحات محصول",icon: Icon(Icons.title),)
-           , Tab(text: "نظرات ",icon: Icon(Icons.comment),)
-            ,Tab(text: "گالری",icon: Icon(Icons.image),)
 
-
-          ]),
           backgroundColor: Colors.red,
           title: Text(titel),
         ),
-        body: TabBarView(children: <Widget>[
+        body:
           (
               !titel.isEmpty?SingleChildScrollView(
                 child: Column(
@@ -73,11 +67,19 @@ class _ProductPageState extends State<ProductPage> {
               )
                   :Container(child: Center(child: CircularProgressIndicator(),),)
           ),
-          Container(child: Center(child: Text("comment"),),)
-          ,Container(child: Center(child: Text("galery"),),)
+        bottomNavigationBar: BottomNavigationBar(items: [
+          BottomNavigationBarItem(icon: Icon(Icons.title),title: Text("توضیحات")),
+          BottomNavigationBarItem(icon: Icon(Icons.comment),title: Text("نظرات")),
+          BottomNavigationBarItem(icon: Icon(Icons.image),title: Text("تصاویر")),
 
-        ],),
-      ),)
+
+        ],onTap: (index){
+          setState(() {
+            tab_index=index;
+          });
+        }
+        ,currentIndex: tab_index,),
+      ),
     );
   }
 }
