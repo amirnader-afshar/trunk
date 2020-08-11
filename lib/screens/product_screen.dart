@@ -18,10 +18,12 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
 
+  final _formkey=GlobalKey<FormState>();
   String title = "";
   String img_url = "";
   String content = "";
   int  tab_index=0;
+
   _ProductPageState(product_instanse) {
     Map<String, String> userHeader = {
       "Content-type": "application/json",
@@ -106,7 +108,7 @@ class _ProductPageState extends State<ProductPage> {
 
     return SingleChildScrollView(child: Container(child:  Padding(
       padding: const EdgeInsets.all(20),
-      child: Column(children: <Widget>[
+      child: Form(key:, child: Column(children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(decoration: InputDecoration(prefixIcon: Icon(Icons.person,color: Colors.red,),labelText: "نام و نام خانوادگی",
@@ -129,7 +131,7 @@ class _ProductPageState extends State<ProductPage> {
         ),
         ButtonTheme(height: 50,minWidth: MediaQuery.of(context).size.width,child:RaisedButton(onPressed: (){},child: Text("ثبت",style: TextStyle(color: Colors.white70),),color: Colors.red,)
           ,)
-      ],),
+      ],),)
     )));
  }
  Widget _gallery_Screen(){
