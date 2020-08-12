@@ -18,6 +18,12 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
 
+
+  String _name="";
+  String _email="";
+  String _comment="";
+
+
   final _formkey=GlobalKey<FormState>();
   String title = "";
   String img_url = "";
@@ -108,28 +114,70 @@ class _ProductPageState extends State<ProductPage> {
 
     return SingleChildScrollView(child: Container(child:  Padding(
       padding: const EdgeInsets.all(20),
-      child: Form(key:, child: Column(children: <Widget>[
+      child: Form(key:_formkey, child: Column(children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: TextField(decoration: InputDecoration(prefixIcon: Icon(Icons.person,color: Colors.red,),labelText: "نام و نام خانوادگی",
+          child: TextFormField(
+          onSaved: (String value)
+            {
+              _name=value;
+            }
+          ,
+            validator: (String value){
+              if (value.trim().isEmpty){
+                return 'لطفا نام و نام خانوادگی خود را واردکنید ';
+              }
+
+            }
+          ,decoration: InputDecoration(prefixIcon: Icon(Icons.person,color: Colors.red,),labelText: "نام و نام خانوادگی",
               border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
           )
             ,),
         ),      Padding(
           padding: const EdgeInsets.all(8.0),
-          child: TextField(decoration: InputDecoration(prefixIcon: Icon(Icons.email,color: Colors.red,),labelText: "e-mail",
+          child: TextFormField(
+              onSaved: (String value){
+                _email=value;
+              },
+            validator: (String value){
+              if (value.trim().isEmpty){
+                return 'لطفا ایمیل خود را واردکنید ';
+              }
+
+            }
+          ,decoration: InputDecoration(prefixIcon: Icon(Icons.email,color: Colors.red,),labelText: "e-mail",
               border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
           )
             ,),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: TextField(keyboardType: TextInputType.multiline,maxLines: null,minLines: 5,decoration: InputDecoration(prefixIcon: Icon(Icons.comment,color: Colors.red,),labelText: "نظر",
+          child: TextFormField(
+
+            onSaved: (String value){
+              _comment=value;
+            }
+            ,
+            validator: (String value){
+              if (value.trim().isEmpty){
+                return 'لطفا نظر خود را واردکنید ';
+              }
+            },
+            keyboardType: TextInputType.multiline,maxLines: null,minLines: 5,decoration: InputDecoration(prefixIcon: Icon(Icons.comment,color: Colors.red,),labelText: "نظر",
               border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
           )
             ,),
         ),
-        ButtonTheme(height: 50,minWidth: MediaQuery.of(context).size.width,child:RaisedButton(onPressed: (){},child: Text("ثبت",style: TextStyle(color: Colors.white70),),color: Colors.red,)
+        ButtonTheme(height: 50,minWidth: MediaQuery.of(context).size.width,child:RaisedButton(onPressed: (){
+
+          if(_formkey.currentState.validate())
+            {
+                _formkey.currentState.save();
+
+                _send_comment_data();
+            }
+
+        },child: Text("ثبت",style: TextStyle(color: Colors.white70),),color: Colors.red,)
           ,)
       ],),)
     )));
@@ -138,4 +186,14 @@ class _ProductPageState extends State<ProductPage> {
 
     return Container(child: Center(child: Text("gallery"),),);
  }
+
+  void _send_comment_data() {
+
+    print("name:${_name}");
+
+    _formkey.currentState.save();
+
+    print("name:${_name}");
+
+  }
 }
