@@ -21,7 +21,7 @@ class _ProductPageState extends State<ProductPage> {
 
   String _name="";
   String _email="";
-  String _comment="";
+  String _content="";
 
 
   final _formkey=GlobalKey<FormState>();
@@ -29,12 +29,13 @@ class _ProductPageState extends State<ProductPage> {
   String img_url = "";
   String content = "";
   int  tab_index=0;
+  final Map<String, String> userHeader = {
+    "Content-type": "application/json",
+    "x-auth": AppData.Token
+  };
 
   _ProductPageState(product_instanse) {
-    Map<String, String> userHeader = {
-      "Content-type": "application/json",
-      "x-auth": AppData.Token
-    };
+
 
     http.get(AppData.App_URL + 'product/' + product_instanse.id,
             headers: userHeader)
@@ -155,7 +156,7 @@ class _ProductPageState extends State<ProductPage> {
           child: TextFormField(
 
             onSaved: (String value){
-              _comment=value;
+              _content=value;
             }
             ,
             validator: (String value){
@@ -172,8 +173,6 @@ class _ProductPageState extends State<ProductPage> {
 
           if(_formkey.currentState.validate())
             {
-                _formkey.currentState.save();
-
                 _send_comment_data();
             }
 
@@ -192,6 +191,15 @@ class _ProductPageState extends State<ProductPage> {
     print("name:${_name}");
 
     _formkey.currentState.save();
+    http.post(AppData.App_URL+'comment'
+        ,headers:  userHeader
+        ,body:convert.jsonEncode( {"id":widget.product_instanse.id
+                ,"name":_name
+                ,"email":_email
+                ,"content":_content
+        })).then((value) => {
+          print(value.body)
+    });
 
     print("name:${_name}");
 
