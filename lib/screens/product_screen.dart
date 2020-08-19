@@ -4,6 +4,8 @@ import 'dart:convert' as convert;
 
 import '../Model/Product.dart';
 import '../AppData.dart';
+import 'CommentForm.dart';
+import 'Comments.dart';
 
 class ProductPage extends StatefulWidget {
   Product product_instanse;
@@ -18,27 +20,16 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
 
-
-  String _name="";
-  String _email="";
-  String _content="";
-
-
-  final _formkey=GlobalKey<FormState>();
   String title = "";
   String img_url = "";
   String content = "";
-  int  tab_index=0;
-  final Map<String, String> userHeader = {
-    "Content-type": "application/json",
-    "x-auth": AppData.Token
-  };
+  int tab_index = 0;
+
 
   _ProductPageState(product_instanse) {
-
-
-    http.get(AppData.App_URL + 'product/' + product_instanse.id,
-            headers: userHeader)
+    http
+        .get(AppData.App_URL + 'product/' + product_instanse.id,
+            headers: AppData.userHeader)
         .then((response) {
       if (response.statusCode == 200) {
         dynamic jsonresponse = convert.jsonDecode(response.body);
@@ -53,155 +44,81 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return MaterialApp(
-      home:  Scaffold(
+      home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.red,
           title: Text(title),
         ),
-        body:
-          (
-              _children(tab_index)
-          ),
-        bottomNavigationBar: BottomNavigationBar(items: [
-          BottomNavigationBarItem(icon: Icon(Icons.title),title: Text("توضیحات")),
-          BottomNavigationBarItem(icon: Icon(Icons.comment),title: Text("نظرات")),
-          BottomNavigationBarItem(icon: Icon(Icons.image),title: Text("تصاویر")),
-
-
-        ],onTap: (index){
-          setState(() {
-            tab_index=index;
-          });
-        }
-        ,currentIndex: tab_index,backgroundColor: Colors.deepOrangeAccent,fixedColor: Colors.white70,
-        unselectedItemColor: Colors.black,),
+        body: (_children(tab_index)),
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.title), title: Text("توضیحات")),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.comment), title: Text("نظرات")),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.image), title: Text("تصاویر")),
+          ],
+          onTap: (index) {
+            setState(() {
+              tab_index = index;
+            });
+          },
+          currentIndex: tab_index,
+          backgroundColor: Colors.deepOrangeAccent,
+          fixedColor: Colors.white70,
+          unselectedItemColor: Colors.black,
+        ),
       ),
     );
   }
 
   Widget _children(int tab_index) {
-
-    List<Widget> page_screen=[];
+    List<Widget> page_screen = [];
 
     page_screen.add(_tozihat_screen());
     page_screen.add(_comment_Screen());
     page_screen.add(_gallery_Screen());
 
     return page_screen[tab_index];
-
   }
 
-  Widget _tozihat_screen(){
+  Widget _tozihat_screen() {
     String titel = "";
     titel = widget.product_instanse.title;
     titel = titel.length > 30 ? titel.substring(0, 30) + ' .... ' : titel;
-    return     !titel.isEmpty?SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          Image(image: NetworkImage(img_url),)
-          ,Text(title)
-          ,Text(content)
-        ],
+    return !titel.isEmpty
+        ? SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Image(
+                  image: NetworkImage(img_url),
+                ),
+                Text(title),
+                Text(content)
+              ],
+            ),
+          )
+        : Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+  }
+
+  Widget _comment_Screen() {
+   // return CommentForm(widget.product_instanse);
+    return Comments(widget.product_instanse);
+  }
+
+  Widget _gallery_Screen() {
+    return Container(
+      child: Center(
+        child: Text("gallery"),
       ),
-    )
-        :Container(child: Center(child: CircularProgressIndicator(),),);
+    );
   }
 
 
- Widget _comment_Screen(){
-
-    return SingleChildScrollView(child: Container(child:  Padding(
-      padding: const EdgeInsets.all(20),
-      child: Form(key:_formkey, child: Column(children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-          onSaved: (String value)
-            {
-              _name=value;
-            }
-          ,
-            validator: (String value){
-              if (value.trim().isEmpty){
-                return 'لطفا نام و نام خانوادگی خود را واردکنید ';
-              }
-
-            }
-          ,decoration: InputDecoration(prefixIcon: Icon(Icons.person,color: Colors.red,),labelText: "نام و نام خانوادگی",
-              border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
-          )
-            ,),
-        ),      Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-              onSaved: (String value){
-                _email=value;
-              },
-            validator: (String value){
-              if (value.trim().isEmpty){
-                return 'لطفا ایمیل خود را واردکنید ';
-              }
-
-            }
-          ,decoration: InputDecoration(prefixIcon: Icon(Icons.email,color: Colors.red,),labelText: "e-mail",
-              border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
-          )
-            ,),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-
-            onSaved: (String value){
-              _content=value;
-            }
-            ,
-            validator: (String value){
-              if (value.trim().isEmpty){
-                return 'لطفا نظر خود را واردکنید ';
-              }
-            },
-            keyboardType: TextInputType.multiline,maxLines: null,minLines: 5,decoration: InputDecoration(prefixIcon: Icon(Icons.comment,color: Colors.red,),labelText: "نظر",
-              border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
-          )
-            ,),
-        ),
-        ButtonTheme(height: 50,minWidth: MediaQuery.of(context).size.width,child:RaisedButton(onPressed: (){
-
-          if(_formkey.currentState.validate())
-            {
-                _send_comment_data();
-            }
-
-        },child: Text("ثبت",style: TextStyle(color: Colors.white70),),color: Colors.red,)
-          ,)
-      ],),)
-    )));
- }
- Widget _gallery_Screen(){
-
-    return Container(child: Center(child: Text("gallery"),),);
- }
-
-  void _send_comment_data() {
-
-    print("name:${_name}");
-
-    _formkey.currentState.save();
-    http.post(AppData.App_URL+'comment'
-        ,headers:  userHeader
-        ,body:convert.jsonEncode( {"id":widget.product_instanse.id
-                ,"name":_name
-                ,"email":_email
-                ,"content":_content
-        })).then((value) => {
-          print(value.body)
-    });
-
-    print("name:${_name}");
-
-  }
 }
