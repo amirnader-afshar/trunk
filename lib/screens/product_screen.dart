@@ -20,6 +20,7 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
 
+  List<dynamic> comment_list=[];
   String title = "";
   String img_url = "";
   String content = "";
@@ -109,7 +110,7 @@ class _ProductPageState extends State<ProductPage> {
 
   Widget _comment_Screen() {
    // return CommentForm(widget.product_instanse);
-    return Comments(widget.product_instanse);
+    return Comments(widget.product_instanse,comment_list);
   }
 
   Widget _gallery_Screen() {
