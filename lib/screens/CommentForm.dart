@@ -29,7 +29,10 @@ class _CommentFormState extends State<CommentForm> {
 
   @override
   Widget build(BuildContext context) {
-    return  Stack(
+    return  Material(child: Scaffold(        appBar: AppBar(
+      backgroundColor: Colors.red,
+      title: Text('ثبت نظر'),
+    ),body: Stack(
       children: [
         SingleChildScrollView(
             child: Container(
@@ -139,7 +142,8 @@ class _CommentFormState extends State<CommentForm> {
         )
             : Text("")
       ],
-    );
+    )),);
+
   }
 
   void _send_comment_data() {

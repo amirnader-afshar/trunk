@@ -24,8 +24,7 @@ class _homepageState extends State<homepage> {
       var url = AppData.App_URL + action;
       Map<String, String> userHeader = {
         "Content-type": "application/json",
-        "x-auth":AppData.Token
-
+        "x-auth": AppData.Token
       };
       http.get(url, headers: userHeader).then((response) {
         print(response.statusCode);
@@ -51,71 +50,98 @@ class _homepageState extends State<homepage> {
     getProductList('product', order_products);
     print(new_products);
 
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          HomeSlider(),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(child: Text("جدیدترین محصولات")),
-                Expanded(
-                    child: Text(
-                  " نمایش همه > ",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.blue),
-                ))
-              ],
-            ),
-          ),
-          new_products.length > 0
-              ? Container(
-                  height: 200,
-                  child: ListView.builder(
-                    itemBuilder: newProductsList,
-                    itemCount: new_products.length,
-                    scrollDirection: Axis.horizontal,
+    return Scaffold(
+        drawer: Drawer(
+            child: Container(
+                child: Column(
+          children: <Widget>[
+            Container(
+              height: 120,
+              color: Colors.red,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Icon(Icons.person, color: Colors.white),
                   ),
-                )
-              : Container(
-                  height: 200,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                ],
+              ),
+            )
+          ],
+        ))),
+        appBar: AppBar(
+            title: Text("فروشگاه من"),
+            backgroundColor: Colors.red,
+            elevation: 0,
+            actions: <Widget>[
+              IconButton(icon: Icon(Icons.search), onPressed: () {}),
+              IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {})
+            ]),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              HomeSlider(),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(child: Text("جدیدترین محصولات")),
+                    Expanded(
+                        child: Text(
+                      " نمایش همه > ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(color: Colors.blue),
+                    ))
+                  ],
                 ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(child: Text("پرفروش ترین محصولات")),
-                Expanded(
-                    child: Text(
-                  " نمایش همه > ",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.blue),
-                ))
-              ],
-            ),
+              ),
+              new_products.length > 0
+                  ? Container(
+                      height: 220,
+                      child: ListView.builder(
+                        itemBuilder: newProductsList,
+                        itemCount: new_products.length,
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    )
+                  : Container(
+                      height: 200,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(child: Text("پرفروش ترین محصولات")),
+                    Expanded(
+                        child: Text(
+                      " نمایش همه > ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(color: Colors.blue),
+                    ))
+                  ],
+                ),
+              ),
+              order_products.length > 0
+                  ? Container(
+                      height: 220,
+                      child: ListView.builder(
+                        itemBuilder: orderProductList,
+                        itemCount: order_products.length,
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    )
+                  : Container(
+                      height: 200,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+            ],
           ),
-          order_products.length > 0
-              ? Container(
-                  height: 200,
-                  child: ListView.builder(
-                    itemBuilder: orderProductList,
-                    itemCount: order_products.length,
-                    scrollDirection: Axis.horizontal,
-                  ),
-                )
-              : Container(
-                  height: 200,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-        ],
-      ),
-    );
+        ));
   }
 
   Widget newProductsList(BuildContext context, int index) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+import 'package:intl/intl.dart';
 
 import '../Model/Product.dart';
 import '../AppData.dart';
@@ -19,28 +20,15 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-
-  List<dynamic> comment_list=[];
+  List<dynamic> comment_list = [];
   String title = "";
   String img_url = "";
+  String price = '0';
   String content = "";
   int tab_index = 0;
 
-
   _ProductPageState(product_instanse) {
-    http
-        .get(AppData.App_URL + 'product/' + product_instanse.id,
-            headers: AppData.userHeader)
-        .then((response) {
-      if (response.statusCode == 200) {
-        dynamic jsonresponse = convert.jsonDecode(response.body);
-        setState(() {
-          title = jsonresponse[0]['name'];
-          img_url = jsonresponse[0]['img_url'];
-          content = jsonresponse[0]['content'];
-        });
-      }
-    });
+    _getProduct(product_instanse);
   }
 
   @override
@@ -86,21 +74,58 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget _tozihat_screen() {
+    //double content_height=MediaQuery.of(context.size.height)-50;
     String titel = "";
     titel = widget.product_instanse.title;
     titel = titel.length > 30 ? titel.substring(0, 30) + ' .... ' : titel;
     return !titel.isEmpty
-        ? SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Image(
-                  image: NetworkImage(img_url),
+        ? Column(children: [
+            Expanded(
+                child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Image(
+                    image: NetworkImage(img_url),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      titel,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                  Container(
+                      child: Text(
+                    content,
+                    textAlign: TextAlign.right,
+                  )),
+                ],
+              ),
+            )),
+            Container(
+              color: Colors.green,
+              height: 50,
+              child: Center(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        price,
+                        style: TextStyle(color: Colors.white, fontSize: 17),
+                      ),
+                    ),
+                    Icon(
+                      Icons.add_shopping_cart,
+                      color: Colors.white,
+                    )
+                  ],
                 ),
-                Text(title),
-                Text(content)
-              ],
+              ),
             ),
-          )
+          ])
         : Container(
             child: Center(
               child: CircularProgressIndicator(),
@@ -109,8 +134,8 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget _comment_Screen() {
-   // return CommentForm(widget.product_instanse);
-    return Comments(widget.product_instanse,comment_list);
+    // return CommentForm(widget.product_instanse);
+    return Comments(widget.product_instanse, comment_list);
   }
 
   Widget _gallery_Screen() {
@@ -121,5 +146,21 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-
+  _getProduct(Product product) async
+  {
+    await http.get(AppData.App_URL + 'product/' + product.id,
+        headers: AppData.userHeader)
+        .then((response) {
+      if (response.statusCode == 200) {
+        dynamic jsonresponse = convert.jsonDecode(response.body);
+        setState(() {
+          title = jsonresponse[0]['name'];
+          img_url = jsonresponse[0]['img_url'];
+          content = jsonresponse[0]['content'];
+          var formatter = new NumberFormat('###,###');
+          price = formatter.format(jsonresponse[0]['price']) + " تومان ";
+        });
+      }
+    });
+  }
 }
