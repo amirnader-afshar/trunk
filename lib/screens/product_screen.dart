@@ -5,8 +5,9 @@ import 'package:intl/intl.dart';
 
 import '../Model/Product.dart';
 import '../AppData.dart';
-import 'CommentForm.dart';
 import 'Comments.dart';
+import '../Cart.dart';
+
 
 class ProductPage extends StatefulWidget {
   Product product_instanse;
@@ -104,27 +105,30 @@ class _ProductPageState extends State<ProductPage> {
                 ],
               ),
             )),
-            Container(
-              color: Colors.green,
-              height: 50,
-              child: Center(
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Text(
-                        price,
-                        style: TextStyle(color: Colors.white, fontSize: 17),
+            InkWell(
+              onTap: () {Cart.add_product_cart(widget.product_instanse);},
+              child: Container(
+                color: Colors.green,
+                height: 50,
+                child: Center(
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text(
+                          price,
+                          style: TextStyle(color: Colors.white, fontSize: 17),
+                        ),
                       ),
-                    ),
-                    Icon(
-                      Icons.add_shopping_cart,
-                      color: Colors.white,
-                    )
-                  ],
+                      Icon(
+                        Icons.add_shopping_cart,
+                        color: Colors.white,
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
+            )
           ])
         : Container(
             child: Center(
@@ -146,10 +150,10 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-  _getProduct(Product product) async
-  {
-    await http.get(AppData.App_URL + 'product/' + product.id,
-        headers: AppData.userHeader)
+  _getProduct(Product product) async {
+    await http
+        .get(AppData.App_URL + 'product/' + product.id,
+            headers: AppData.userHeader)
         .then((response) {
       if (response.statusCode == 200) {
         dynamic jsonresponse = convert.jsonDecode(response.body);
