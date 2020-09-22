@@ -8,7 +8,6 @@ import '../AppData.dart';
 import 'Comments.dart';
 import '../Cart.dart';
 
-
 class ProductPage extends StatefulWidget {
   Product product_instanse;
 
@@ -105,29 +104,50 @@ class _ProductPageState extends State<ProductPage> {
                 ],
               ),
             )),
-            InkWell(
-              onTap: () {Cart.add_product_cart(widget.product_instanse);},
-              child: Container(
-                color: Colors.green,
-                height: 50,
-                child: Center(
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Text(
-                          price,
-                          style: TextStyle(color: Colors.white, fontSize: 17),
-                        ),
+            Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    Cart.add_product_cart(widget.product_instanse);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    color: Colors.green,
+                    height: 50,
+                    child: Center(
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Text(
+                              price,
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 17),
+                            ),
+                          ),
+                          Icon(
+                            Icons.add_shopping_cart,
+                            color: Colors.white,
+                          )
+                        ],
                       ),
-                      Icon(
-                        Icons.add_shopping_cart,
-                        color: Colors.white,
-                      )
-                    ],
+                    ),
                   ),
                 ),
-              ),
+                InkWell(
+                    onTap: () {
+                      Cart.Remove_product_cart(widget.product_instanse);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      color: Colors.red,
+                      height: 50,
+                      child: Icon(
+                        Icons.remove_shopping_cart,
+                        color: Colors.white,
+                      ),
+                    ))
+              ],
             )
           ])
         : Container(
