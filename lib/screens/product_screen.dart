@@ -172,7 +172,7 @@ class _ProductPageState extends State<ProductPage> {
 
   _getProduct(Product product) async {
     await http
-        .get(AppData.App_URL + 'product/' + product.id,
+        .get(AppData.App_URL + 'product/products/?id=' + product.id,
             headers: AppData.userHeader)
         .then((response) {
       if (response.statusCode == 200) {

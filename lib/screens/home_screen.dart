@@ -46,8 +46,8 @@ class _homepageState extends State<homepage> {
 
   @override
   Widget build(BuildContext context) {
-    getProductList('product', new_products);
-    getProductList('product', order_products);
+    getProductList('product/products', new_products);
+    getProductList('product/products', order_products);
     print(new_products);
 
     return Scaffold(

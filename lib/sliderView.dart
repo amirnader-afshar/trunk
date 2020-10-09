@@ -12,16 +12,14 @@ class HomeSlider extends StatefulWidget {
 
 class _HomeSliderState extends State<HomeSlider> {
   List<Appslider> sliderList = [];
+  int get_exec_count=0,slider_position = 0;
 
-  int slider_position = 0;
-
-  void getSlider() {
-    if (sliderList.length == 0) {
-      var url = AppData.App_URL+"slides";
+  void getSlider ()  {
+       get_exec_count+=1;
+      var url = AppData.App_URL+"admin/slides";
       Map<String, String> userHeader = {
         "Content-type": "application/json",
         "x-auth": AppData.Token
-
       };
       http.get(url, headers: userHeader).then((response) {
         print(response.statusCode);
@@ -39,17 +37,19 @@ class _HomeSliderState extends State<HomeSlider> {
             });
           }
         }
+      }).catchError((err){
+        print(err);
+        get_exec_count=0;
       });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    getSlider();
+    if (get_exec_count == 0) {
+      getSlider();
+    }
     print(sliderList);
-
     return
-
       Container(
         child: sliderList.length > 0
             ? Stack(

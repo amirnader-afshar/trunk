@@ -154,7 +154,7 @@ class _CommentFormState extends State<CommentForm> {
     });
 
     http
-        .post(AppData.App_URL + 'comment',
+        .post(AppData.App_URL + 'comment/comments',
         headers: AppData.userHeader,
         body: convert.jsonEncode({
           "id": widget.product_instanse.id,

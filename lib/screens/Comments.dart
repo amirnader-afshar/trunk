@@ -50,24 +50,39 @@ class _CommentsView extends State<Comments> {
                 },
                 itemCount: itemCount,
               ),
-              Positioned(
-                bottom: 25,
-                right: 25,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    AppData.GoNewScreen(context, CommentForm(widget.product_instanse), 1, 0);
-                  },
-                  child: Icon(Icons.add),
-                  backgroundColor: Colors.red,
-                ),
-              )
+              floating_add()
             ],
           )
-        : Container(
+        : widget.comment_list.length == 0 && more_data==0 ?
+        Stack(children: [
+          Container(
+            child: Center(
+              child: Text('نظری ثبت نشده'),
+            ),
+          ),
+          floating_add()
+        ],)
+
+        :Container(
             child: Center(
               child: CircularProgressIndicator(),
             ),
           );
+  }
+
+  Widget floating_add(){
+    return
+    Positioned(
+      bottom: 25,
+      right: 25,
+      child: FloatingActionButton(
+        onPressed: () {
+          AppData.GoNewScreen(context, CommentForm(widget.product_instanse), 1, 0);
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   Widget comment_row(int index) {
@@ -122,9 +137,9 @@ class _CommentsView extends State<Comments> {
     http
         .get(
             AppData.App_URL +
-                'comment/' +
+                'comment/comments?productid=' +
                 product_instanse.id +
-                '&' +
+                '&page=' +
                 page.toString(),
             headers: AppData.userHeader)
         .then((response) => {
