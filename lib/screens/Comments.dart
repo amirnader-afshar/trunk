@@ -9,6 +9,7 @@ import '../Model/Product.dart';
 class Comments extends StatefulWidget {
   Product product_instanse;
   List<dynamic> comment_list;
+  dynamic commentcount_response;
   Comments(this.product_instanse, this.comment_list);
 
   @override
@@ -18,6 +19,7 @@ class Comments extends StatefulWidget {
 class _CommentsView extends State<Comments> {
   int page = 1;
   int more_data = 1;
+  int commentCount = 0;
 
   ScrollController _scrollController = new ScrollController();
   void initState() {
@@ -62,7 +64,6 @@ class _CommentsView extends State<Comments> {
           ),
           floating_add()
         ],)
-
         :Container(
             child: Center(
               child: CircularProgressIndicator(),
@@ -87,7 +88,7 @@ class _CommentsView extends State<Comments> {
 
   Widget comment_row(int index) {
     double w = MediaQuery.of(context).size.width - 30;
-    if (index == widget.comment_list.length) {
+    if ((index == widget.comment_list.length ) && (index<commentCount)){
       return Container(
         height: 100,
         width: w,
@@ -95,7 +96,8 @@ class _CommentsView extends State<Comments> {
           child: CircularProgressIndicator(),
         ),
       );
-    } else {
+    }
+    else if (index < widget.comment_list.length ){
       return Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey[400], width: 1),
@@ -156,5 +158,24 @@ class _CommentsView extends State<Comments> {
                   page = page + 1
                 }
             });
+    http
+        .get(
+        AppData.App_URL +
+            'comment/commentcount?productid=' +
+            product_instanse.id ,
+        headers: AppData.userHeader)
+        .then((response) => {
+      if (response.statusCode == 200)
+        {
+          setState(() {
+            if (response.body == "[]") {
+              commentCount = 0;
+            } else {
+              widget.commentcount_response=convert.jsonDecode(response.body);
+              commentCount= widget.commentcount_response["commentCount"] as int;
+              print(commentCount);
+          }}),
+        }
+    });
   }
 }

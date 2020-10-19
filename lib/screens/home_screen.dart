@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_afshar_app/Model/Product.dart';
+import 'package:flutter_afshar_app/screens/CartScreen.dart';
 import 'package:flutter_afshar_app/sliderView.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
@@ -75,7 +76,9 @@ class _homepageState extends State<homepage> {
             elevation: 0,
             actions: <Widget>[
               IconButton(icon: Icon(Icons.search), onPressed: () {}),
-              IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {})
+              IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {
+                AppData.GoNewScreen(context, CartScreen(), 0, 1);
+              })
             ]),
         body: SingleChildScrollView(
           child: Column(
