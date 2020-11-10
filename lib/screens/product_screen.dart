@@ -1,4 +1,6 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_afshar_app/screens/CartScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:intl/intl.dart';
@@ -7,6 +9,7 @@ import '../Model/Product.dart';
 import '../AppData.dart';
 import 'Comments.dart';
 import '../Cart.dart';
+import './CartScreen.dart';
 
 class ProductPage extends StatefulWidget {
   Product product_instanse;
@@ -26,6 +29,7 @@ class _ProductPageState extends State<ProductPage> {
   String price = '0';
   String content = "";
   int tab_index = 0;
+  int pcount=0;
 
   _ProductPageState(product_instanse) {
     _getProduct(product_instanse);
@@ -108,7 +112,15 @@ class _ProductPageState extends State<ProductPage> {
               children: [
                 InkWell(
                   onTap: () {
-                    Cart.add_product_cart(widget.product_instanse);
+                    Cart.add_product_cart(widget.product_instanse).then((value) =>{
+
+                    Cart.get_product_count(widget.product_instanse).then((value) => {
+                    setState((){
+                      pcount=value;
+                    })
+                    })
+
+                    } );
                   },
                   child: Container(
                     padding: EdgeInsets.all(10),
@@ -126,9 +138,10 @@ class _ProductPageState extends State<ProductPage> {
                             ),
                           ),
                           Icon(
-                            Icons.add_shopping_cart,
+                            Icons.add,
                             color: Colors.white,
-                          )
+                          ),
+
                         ],
                       ),
                     ),
@@ -136,17 +149,45 @@ class _ProductPageState extends State<ProductPage> {
                 ),
                 InkWell(
                     onTap: () {
-                      Cart.Remove_product_cart(widget.product_instanse);
+                      Cart.Reduce_product_cart(widget.product_instanse).then((value) => {
+                        Cart.get_product_count(widget.product_instanse).then((value) => {
+                          setState((){
+                            pcount=value;
+                          })
+                        })
+                      });
                     },
                     child: Container(
                       padding: EdgeInsets.all(10),
                       color: Colors.red,
                       height: 50,
                       child: Icon(
-                        Icons.remove_shopping_cart,
+                        Icons.remove,
                         color: Colors.white,
                       ),
                     ))
+                ,
+                InkWell(
+                    onTap: () {
+                      AppData.GoNewScreen(context, CartScreen(), 0, 1);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      color: Colors.blue,
+                      height: 50,
+                      width:150 ,
+                      child:  Badge(
+                          position: BadgePosition.topEnd(top: 0, end:45),
+                          animationDuration: Duration(milliseconds: 300),
+                          animationType: BadgeAnimationType.slide,
+                          badgeContent: Text(
+                            pcount.toString(),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          child: IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {})
+                      )
+                    )
+                )
               ],
             )
           ])
